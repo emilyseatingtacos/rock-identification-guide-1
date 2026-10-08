@@ -3,9 +3,9 @@
 @tailwind components;
 @tailwind utilities;
 
-:root { font-family: 'DM Sans', ui-sans-serif, system-ui, sans-serif; color-scheme: light; }
-html { scroll-behavior: smooth; }
-body { @apply antialiased; margin: 0; }
+:root { font-family: 'DM Sans', ui-sans-serif, system-ui, sans-serif; color-scheme: dark; }
+html { scroll-behavior: smooth; background: #151a1d; }
+body { @apply antialiased; margin: 0; background: #151a1d; color: #eef2f3; }
 button, a, input { -webkit-tap-highlight-color: transparent; }
 .font-display { font-family: 'Playfair Display', Georgia, serif; }
-::selection { background: #d9bd91; color: #304b3e; }
+::selection { background: #f59e0b; color: #151a1d; }
