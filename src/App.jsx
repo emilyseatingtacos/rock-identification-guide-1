@@ -4,15 +4,18 @@ import { useEffect, useMemo, useRef, useState } from 'react';
 const guidePdf = 'https://blobs.vusercontent.net/blob/rockidguide_lot_b_allenton_wi_2026-05-18_images-24icjr7c4lPBlsbp6yvQ6byZ7hRav2.pdf';
 const tags = ['All rocks', 'Igneous', 'Sedimentary', 'Metamorphic', 'Minerals', 'Fossils'];
 const rocks = [
-  { name: 'Granite', type: 'Igneous', detail: 'Coarse-grained', color: 'bg-[#59636b]', clue: 'pink or gray crystals; quartz, feldspar, mica' },
-  { name: 'Basalt', type: 'Igneous', detail: 'Fine-grained', color: 'bg-[#4d5555]', clue: 'dark, dense, fine-grained volcanic rock' },
-  { name: 'Sandstone', type: 'Sedimentary', detail: 'Clastic', color: 'bg-[#69747b]', clue: 'visible sand grains and gritty texture' },
-  { name: 'Limestone', type: 'Sedimentary', detail: 'Carbonate', color: 'bg-[#aeb8bd]', clue: 'pale, chalky; may fizz with vinegar' },
-  { name: 'Slate', type: 'Metamorphic', detail: 'Foliated', color: 'bg-[#66757a]', clue: 'splits into thin, flat layers' },
-  { name: 'Marble', type: 'Metamorphic', detail: 'Crystalline', color: 'bg-[#b8b8ad]', clue: 'interlocking calcite crystals' },
-  { name: 'Quartz', type: 'Minerals', detail: 'Hardness 7', color: 'bg-[#c7d0d4]', clue: 'glassy luster; scratches glass' },
-  { name: 'Obsidian', type: 'Igneous', detail: 'Glassy', color: 'bg-[#30383b]', clue: 'smooth volcanic glass with sharp fracture' },
-  { name: 'Fossil shell', type: 'Fossils', detail: 'Organic imprint', color: 'bg-[#66727a]', clue: 'repeating form, shell texture, or mineralized remains' },
+  { name: 'Granite', type: 'Igneous', detail: 'Coarse crystals', color: 'bg-[#59636b]', clue: 'pink, gray, or white crystals; quartz, feldspar, mica' },
+  { name: 'Gneiss', type: 'Metamorphic', detail: 'Wavy bands', color: 'bg-[#66757a]', clue: 'granite-like crystals with light and dark stripes' },
+  { name: 'Basalt', type: 'Igneous', detail: 'Fine-grained', color: 'bg-[#4d5555]', clue: 'dark, dense, plain-looking, and heavy' },
+  { name: 'Gabbro / diorite', type: 'Igneous', detail: 'Dark crystals', color: 'bg-[#59636b]', clue: 'dark and heavy, with crystals you can see' },
+  { name: 'Rhyolite', type: 'Igneous', detail: 'Fine-grained', color: 'bg-[#69747b]', clue: 'light volcanic rock with tiny grains or flow bands' },
+  { name: 'Vein quartz', type: 'Minerals', detail: 'Very hard', color: 'bg-[#c7d0d4]', clue: 'white to clear, glassy, and scratches glass' },
+  { name: 'Quartzite', type: 'Metamorphic', detail: 'Fused grains', color: 'bg-[#7b8790]', clue: 'sand-like grains fused together; very hard' },
+  { name: 'Chert', type: 'Sedimentary', detail: 'Waxy', color: 'bg-[#69747b]', clue: 'smooth, waxy, and breaks with sharp curved edges' },
+  { name: 'Dolomite', type: 'Sedimentary', detail: 'Slow fizz', color: 'bg-[#aeb8bd]', clue: 'local pale bedrock; sugary crystals and slow fizz' },
+  { name: 'Limestone', type: 'Sedimentary', detail: 'Fast fizz', color: 'bg-[#b8c0c4]', clue: 'local pale bedrock; chalky, shells, and fast fizz' },
+  { name: 'Sandstone', type: 'Sedimentary', detail: 'Gritty', color: 'bg-[#69747b]', clue: 'visible sand grains; feels rough like sandpaper' },
+  { name: 'Greenstone', type: 'Metamorphic', detail: 'Dark green-gray', color: 'bg-[#59656d]', clue: 'fine-grained dark green-gray glacial traveler' },
 ];
 const sampleRocks = [
   { name: 'Granite', type: 'Igneous', image: '/samples/granite.png', confidence: '92%', price: '$8–$35', clue: 'Pink feldspar, clear quartz, and black mica.' },
@@ -26,11 +29,25 @@ const guides = [
   { title: 'Read the Land', meta: '32 pages · landscapes and regional geology', accent: 'from-[#8b969d] via-[#59656d] to-[#40534c]', mark: 'LAND', href: '#field-tools' },
   { title: 'Photograph a Rock', meta: '8 pages · light, scale, angles, texture', accent: 'from-[#f59e0b] via-[#c56a2d] to-[#7b4a20]', mark: 'PHOTO', href: '#camera-guide' },
 ];
+const regionalRocks = [
+  { name: 'Granite', story: 'far-traveled glacial erratic', clue: 'pink, gray, or white sparkly crystals; glassy quartz, blocky feldspar, and black mica' },
+  { name: 'Gneiss', story: 'far-traveled glacial erratic', clue: 'granite-like crystals with wavy light and dark bands' },
+  { name: 'Basalt', story: 'far-traveled glacial erratic', clue: 'dark gray to black, fine-grained, and heavy for its size' },
+  { name: 'Gabbro / diorite', story: 'far-traveled glacial erratic', clue: 'dark and heavy, but crystals are easy to see' },
+  { name: 'Rhyolite', story: 'far-traveled glacial erratic', clue: 'light volcanic rock with tiny grains and possible flow bands' },
+  { name: 'Vein quartz', story: 'far-traveled glacial erratic', clue: 'white to clear and glassy; scratches glass; curved breaks' },
+  { name: 'Quartzite', story: 'far-traveled glacial erratic', clue: 'fused sand grains, glassy sparkle, and very hard' },
+  { name: 'Chert', story: 'far-traveled glacial erratic', clue: 'smooth, waxy, and sharp curved breaks; gray, brown, or banded' },
+  { name: 'Dolomite', story: 'local bedrock chunk', clue: 'pale gray to tan with sugary crystals; slow vinegar fizz' },
+  { name: 'Limestone', story: 'local bedrock chunk', clue: 'pale and chalky, sometimes with shells; fast vinegar fizz' },
+  { name: 'Sandstone', story: 'local bedrock chunk', clue: 'gritty sand grains that you can see and feel' },
+  { name: 'Greenstone', story: 'far-traveled glacial erratic', clue: 'dark green-gray, fine-grained, sometimes a little soapy' },
+];
 const locationProfiles = {
-  'Allenton, WI': { region: 'Southeastern Wisconsin glacial drift', note: 'Mixed glacial/field stones are common here. Look for transported quartz, granite, chert, greenstone, and carbonate candidates.', likely: ['Quartz / vein quartz', 'Granite / pegmatite', 'Jasper / chert', 'Dark mafic stone'] },
-  'Upper Peninsula, MI': { region: 'Precambrian bedrock and glacial till', note: 'Old volcanic and metamorphic rocks are frequent, often rounded by glacial transport.', likely: ['Greenstone / basalt', 'Granite', 'Quartzite', 'Iron-rich chert'] },
-  'Denver, CO': { region: 'Front Range foothills', note: 'Mountain-source rocks can include granite, gneiss, schist, and quartz-rich cobbles.', likely: ['Granite', 'Gneiss', 'Quartzite', 'Schist'] },
-  'Other location': { region: 'General field context', note: 'Location helps narrow possibilities, but a visual ID is still a working identification until tested.', likely: ['Quartz-rich rock', 'Feldspar-rich rock', 'Dark mafic stone', 'Carbonate candidate'] },
+  'Allenton, WI': { region: 'SE Wisconsin + northern Illinois glacial drift', note: 'Ice from the Lake Michigan and Green Bay Lobes brought Canadian Shield rocks south. Loose stones are often far-traveled erratics or local limestone, dolomite, and sandstone.', likely: regionalRocks.map((rock) => rock.name) },
+  'Upper Peninsula, MI': { region: 'Great Lakes glacial drift', note: 'Ice moved old Canadian Shield rocks and local bedrock. Use the same erratic-versus-local story, then test.', likely: regionalRocks.map((rock) => rock.name) },
+  'Denver, CO': { region: 'Outside this grounded region', note: 'This guide is grounded for SE Wisconsin and northern Illinois. I need more local data here, so I will not guess.', likely: [] },
+  'Other location': { region: 'Region not set', note: 'Choose SE Wisconsin or northern Illinois for this grounded guide. Location helps, but tests still decide.', likely: [] },
 };
 
 const chatSuggestions = ['Run a hardness test', 'Compare lookalikes', 'Save to journal', 'What should I photograph next?'];
@@ -59,7 +76,7 @@ function createAnalysisMessage(sample, place) {
   const name = sample?.name || 'Unidentified specimen';
   const confidence = sample?.confidence || 'working confidence: 70%';
   const clue = sample?.clue || 'surface texture, grain size, color, and fracture pattern';
-  return `Direct answer: This looks most like ${name} (${confidence}).\n\nEvidence from the photo: 1) ${clue} 2) visible grain or crystal size 3) the edge, layering, or fossil detail. I’ll remember this photo and ${place} while we work. It matches the ${name} entry in the Fieldstone rock database.\n\nOne next step: Try a steel-nail scratch test, then tell me whether it scratches or leaves a mark. To rank the next match, I’ll ask one thing at a time: where was it found, does it scratch glass, does vinegar fizz, is it magnetic, and how heavy does it feel?`;
+  return `Direct answer: This photo is a maybe for ${name} (${confidence}). I will not call it certain from a photo.\n\nEvidence from the photo: ${clue}. The place is ${place}. In SE Wisconsin and northern Illinois glacial drift, this may be a far-traveled glacial erratic, or it may be local limestone, dolomite, or sandstone. I need tests before I choose.\n\nOne next step: Take these shots to raise my confidence: top, side, and texture close-up. Put a coin next to the rock. Then try the scratch test. No species-level guess from a blurry photo.`;
 }
 
 function createChatReply(question, sample, place, teachMode) {
@@ -67,9 +84,9 @@ function createChatReply(question, sample, place, teachMode) {
   const name = typeof sample === 'string' ? sample : sample?.name || 'this specimen';
   if (!topicWords.some((word) => normalized.includes(word))) return 'I’m your field geologist for rocks, minerals, fossils, and collecting. I can help with this specimen, tests, location, lookalikes, or field value—but not that topic. What rock question can we tackle?';
   if (teachMode) return `Direct answer: Let’s narrow ${name} together rather than jump to a label.\n\nEvidence to use: The photo suggests ${name}, but the Fieldstone database still needs a field clue to separate its lookalikes.\n\nOne next step: Look at a fresh edge: do you see distinct crystals, fine grains, layers, or a shell pattern? Reply with the closest match.`;
-  if (normalized.includes('test') || normalized.includes('hardness') || normalized.includes('scratch')) return `Direct answer: Start with hardness for ${name}; it is the fastest safe separator in the field.\n\nWhat to look for: A steel nail scratches softer carbonate rock, while quartz-rich material can scratch glass. Avoid scratching glass if the specimen is valuable. The Fieldstone database uses this result to rerank matches.\n\nOne next step: Test an inconspicuous edge with a steel nail and reply: “nail scratches,” “specimen scratches,” or “neither.”`;
+  if (normalized.includes('test') || normalized.includes('hardness') || normalized.includes('scratch')) return `Direct answer: Start with the scratch test. Can your fingernail scratch it? No? Try a penny. Still no? Try the edge of a glass jar.\n\nWhat to look for: A rock that scratches glass is hard, like granite, quartz, or quartzite. A softer rock may be dolomite, limestone, or sandstone.\n\nOne next step: Tell me what made a mark. Every passed test raises confidence one step. If tests disagree, I will say so.`;
   if (normalized.includes('look') || normalized.includes('similar')) return `Direct answer: The leading lookalikes for ${name} are quartz-rich stone, feldspar-rich granite, and pale carbonate rock.\n\nWhat to look for: Compare crystal shape, grain size, cleavage, luster, and any fossil or shell pattern with the matching Fieldstone database entries.\n\nOne next step: Send a close-up of the freshest edge, with a coin or ruler for scale.`;
-  if (normalized.includes('photo')) return `Direct answer: Photograph the top, a fresh edge, and the whole specimen beside a coin or ruler.\n\nWhat to look for: Even lighting, a sharp texture close-up, true color, and anything fossil-like or layered. More angles improve the ranking; one photo is still enough to begin.\n\nOne next step: Upload the next angle and I’ll compare it with the remembered photo.`;
+  if (normalized.includes('photo')) return `Direct answer: Take these shots to raise my confidence: top view for color and shape, side view for bands and thickness, and a texture close-up for grains.\n\nWhat to look for: Use even light. Put a coin next to it. Show the fresh broken surface and the weathered outside if you can.\n\nOne next step: Upload the next angle. One photo is only a maybe.`;
   if (normalized.includes('worth') || normalized.includes('keep') || normalized.includes('value')) return `Direct answer: Keep it if the texture, fossil detail, locality, or crystal form is distinctive; a photo alone is not an appraisal.\n\nWhat to look for: Intact surfaces, provenance, unusual features, damage, exact weight, and sold—not asking—prices for ${name}.\n\nOne next step: Weigh it and photograph it beside a ruler, then compare the cached eBay-style range in the Fieldstone database.`;
   return `Direct answer: ${name} remains the leading working ID, but my confidence needs one more field clue.\n\nWhat to look for: Recheck the photo against the ${name} entry in the Fieldstone database, especially grain, fracture, layers, and fossil elements. I remember your ${place} context.\n\nOne next step: Where was it found? Then we’ll check glass scratch, vinegar fizz, magnetism, and weight one at a time. For weight, tell me: does it feel heavier than a pound, or light enough to sit in your palm?`;
 }
@@ -117,9 +134,9 @@ function App() {
   if (!files.length) return;
   const first = files[0];
   const matches = [
-    { name: 'Quartz-rich field stone', confidence: '76%', clue: 'light reflective grains and a glassy-looking edge', features: ['light reflective grains', 'glassy-looking edge', 'compact surface'], against: 'A fresh edge is still needed to see the grain shape.' },
-    { name: 'Granite', confidence: '61%', clue: 'mixed grains that may include pale feldspar and dark mica', features: ['mixed grain sizes', 'pale crystal flecks', 'dark specks'], against: 'The photo does not yet show clear pink feldspar.' },
-    { name: 'Chert', confidence: '43%', clue: 'smooth, fine texture with a possible waxy surface', features: ['smooth fine texture', 'rounded edge', 'soft shine'], against: 'No fresh broken surface is visible.' },
+    { name: 'Granite', confidence: files.length >= 3 ? 'likely' : 'maybe', score: files.length >= 3 ? 2 : 1, story: 'far-traveled glacial erratic', clue: 'pink, gray, or white sparkly crystals with quartz, feldspar, and mica', features: ['sparkly crystals', 'salt-and-pepper look', 'light and dark flecks'], against: 'The photo alone cannot show hardness or prove the rock is granite.' },
+    { name: 'Gneiss', confidence: files.length >= 3 ? 'likely' : 'maybe', score: files.length >= 3 ? 2 : 1, story: 'far-traveled glacial erratic', clue: 'granite-like crystals with stripes or wavy light and dark bands', features: ['light and dark bands', 'wavy layers', 'visible crystals'], against: 'Bands are not clear in one photo.' },
+    { name: 'Chert', confidence: files.length >= 3 ? 'likely' : 'maybe', score: files.length >= 3 ? 2 : 1, story: 'far-traveled glacial erratic', clue: 'smooth, waxy surface with sharp curved breaks', features: ['smooth surface', 'soft shine', 'curved edge'], against: 'A fresh broken surface and streak test are still needed.' },
   ];
   setFile(first);
   setAdditionalPhotos(files.slice(1, 3));
@@ -136,12 +153,14 @@ function App() {
   const sendChat = (event, suggestedQuestion = chatInput) => { event?.preventDefault(); const question = suggestedQuestion.trim(); if (!question) return; if (question === 'Save to journal') { saveCurrentFind(); setChatMessages((messages) => [...messages, { role: 'user', text: question }, { role: 'assistant', text: `Direct answer: Saved this find to your field journal.\n\nWhat to look for: Your photo, ${location} context, and any test results will stay attached to this conversation.\n\nOne next step: Add a note about the exact find spot when you have it.` }]); setChatInput(''); return; } setChatMessages((messages) => [...messages, { role: 'user', text: question }, { role: 'assistant', text: createChatReply(question, file || 'this specimen', location, teachMode) }]); setChatInput(''); };
 
   const testSteps = [
-    { key: 'hardness', title: 'Hardness: scratch test', prompt: 'Try your fingernail first. If it does not scratch the rock, try an old glass bottle. Which one made a mark?', options: ['Fingernail made a mark', 'Glass made a mark', 'Neither made a mark'] },
-    { key: 'streak', title: 'Streak: powder line', prompt: 'Rub a hidden edge on the rough back of an unglazed white mug. What color line did it leave?', options: ['White or no line', 'Red, brown, or yellow line', 'Black or gray line'] },
-    { key: 'vinegar', title: 'Vinegar: tiny fizz test', prompt: 'Put one drop of vinegar on a hidden spot. Did you see tiny bubbles?', options: ['Yes, it fizzed', 'No fizz', 'Not sure'] },
+    { key: 'hardness', title: 'Scratch test', prompt: 'Can your fingernail scratch it? No? Try a penny. Still no? Try the edge of a glass jar.', options: ['Fingernail made a mark', 'Penny made a mark', 'Glass made a mark', 'Nothing made a mark'] },
+    { key: 'streak', title: 'Streak test', prompt: 'Rub it hard on the back of a bathroom tile. What color line did it leave?', options: ['White or no line', 'Red, brown, or yellow line', 'Black or gray line'] },
+    { key: 'vinegar', title: 'Fizz test', prompt: 'Put one drop of vinegar on it. Fast bubbles mean limestone. Slow bubbles, or bubbles on scratched powder, mean dolomite.', options: ['Fast bubbles', 'Slow bubbles', 'Bubbles on powder', 'No bubbles'] },
+    { key: 'magnet', title: 'Magnet test', prompt: 'Does a fridge magnet stick, even a little? That means iron minerals are inside.', options: ['Yes, it sticks', 'No, it does not stick', 'Not sure'] },
+    { key: 'heft', title: 'Weight question', prompt: 'Does it feel heavier than a pound, or does it fit in your palm?', options: ['Heavier than a pound', 'Fits in my palm', 'Not sure'] },
   ];
-  const answerTest = (answer) => { const step = testSteps[testStep]; const nextResults = { ...testResults, [step.key]: answer }; setTestResults(nextResults); if (testStep < testSteps.length - 1) setTestStep(testStep + 1); setRankedMatches((matches) => matches.map((match, index) => ({ ...match, confidence: `${Math.min(96, Math.max(28, Number.parseInt(match.confidence, 10) + (index === 0 ? 6 : index === 1 ? 1 : -3)))}%` }))); setChatMessages((messages) => [...messages, { role: 'assistant', text: `Test noted: ${answer}. I updated the ranking. The next question is one step at a time, so we do not guess.` }]); };
-  const handleMatchDetails = (match, index) => setChatMessages((messages) => [...messages, { role: 'assistant', text: 'Direct answer: ' + match.name + ' is ranked number ' + (index + 1) + ' at ' + match.confidence + '. What to look for: ' + match.clue + '. One next step: Try one field test before you keep this result.' }]);
+  const answerTest = (answer) => { const step = testSteps[testStep]; const nextResults = { ...testResults, [step.key]: answer }; const passed = !answer.toLowerCase().includes('not sure') && !answer.toLowerCase().includes('no ') && !answer.toLowerCase().includes('nothing'); setTestResults(nextResults); if (testStep < testSteps.length - 1) setTestStep(testStep + 1); setRankedMatches((matches) => matches.map((match, index) => { const score = Math.min(4, match.score + (passed ? 1 : 0)); return { ...match, score, confidence: score >= 4 ? 'very confident' : score >= 3 ? 'confident' : score >= 2 ? 'likely' : 'maybe' }; })); setChatMessages((messages) => [...messages, { role: 'assistant', text: `Test noted: ${answer}. ${passed ? 'That passed one field test, so confidence moved up one step.' : 'This does not raise confidence yet.'} I still will not guess if the clues disagree.` }]); };
+  const handleMatchDetails = (match, index) => setChatMessages((messages) => [...messages, { role: 'assistant', text: 'Direct answer: ' + match.name + ' is ranked number ' + (index + 1) + ' at ' + match.confidence + '. Story that fits: ' + match.story + '. What to look for: ' + match.clue + '. One next step: Take these shots to raise my confidence, then run one field test.' }]);
 
   return <div className="min-h-screen overflow-x-hidden bg-[#151a1d] text-[#eef2f3]">
     <header className="sticky top-0 z-10 border-b border-[#3f484d] bg-[#151a1d]/95 backdrop-blur"><div className="mx-auto flex max-w-7xl items-center justify-between px-5 py-4 lg:px-8">
