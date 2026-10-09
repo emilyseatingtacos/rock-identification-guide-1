@@ -1,5 +1,5 @@
 import { useEffect, useMemo, useRef, useState } from 'react';
-  import { ArrowRight, BookOpen, Camera, Check, CircleHelp, Compass, Download, FileImage, Gem, LocateFixed, MapPin, Menu, MessageCircle, Mountain, NotebookPen, Search, Send, Share2, Sparkles, Upload, X } from 'lucide-react';
+  import { ArrowRight, BookOpen, Camera, Check, CircleHelp, Compass, Download, FileImage, Gem, LocateFixed, LockKeyhole, LogIn, MapPin, Menu, MessageCircle, Mountain, NotebookPen, Search, Send, Share2, Sparkles, Upload, UserRound, X } from 'lucide-react';
 
 const guidePdf = 'https://blobs.vusercontent.net/blob/rockidguide_lot_b_allenton_wi_2026-05-18_images-24icjr7c4lPBlsbp6yvQ6byZ7hRav2.pdf';
 const tags = ['All rocks', 'Igneous', 'Sedimentary', 'Metamorphic', 'Minerals', 'Fossils'];
@@ -99,6 +99,8 @@ function App() {
   const [sizeReference, setSizeReference] = useState('');
   const [journal, setJournal] = useState([]);
   const [journalView, setJournalView] = useState('collection');
+  const [accountOpen, setAccountOpen] = useState(false);
+  const [accountMessage, setAccountMessage] = useState('');
   const inputRef = useRef(null);
   const cameraRef = useRef(null);
   const profile = locationProfiles[location];
